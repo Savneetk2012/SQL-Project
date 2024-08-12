@@ -183,35 +183,7 @@ FROM titles
 WHERE genres 
 LIKE '%european%';
 
-
-
--- -- Which genres have the highest average IMDb scores, and which genres have the lowest average IMDb scores?
--- for shows
-
-SELECT 
-    SUBSTRING_INDEX(SUBSTRING_INDEX(genres, ',', n), ',', -1) AS genre,
-    AVG(imdb_score) AS avg_imdb_score, AVG (tmdb_score) as avg_tmdb_score
-FROM titles
-INNER JOIN (SELECT 1 AS n UNION SELECT 2 AS n UNION SELECT 3 AS n UNION SELECT 4 AS n) AS nums
-ON n <= LENGTH(genres) - LENGTH(REPLACE(genres, ',', '')) + 1
-WHERE type= "show"
-GROUP BY genre
-ORDER BY avg_imdb_score desc , avg_tmdb_score DESC
-LIMIT 5;
-
--- for movies
-
-SELECT 
-    SUBSTRING_INDEX(SUBSTRING_INDEX(genres, ',', n), ',', -1) AS genre,
-    AVG(imdb_score) AS avg_imdb_score, AVG (tmdb_score) as avg_tmdb_score
-FROM titles
-INNER JOIN (SELECT 1 AS n UNION SELECT 2 AS n UNION SELECT 3 AS n UNION SELECT 4 AS n) AS nums
-ON n <= LENGTH(genres) - LENGTH(REPLACE(genres, ',', '')) + 1
-WHERE type= "movie"
-GROUP BY genre
-ORDER BY avg_imdb_score desc , avg_tmdb_score DESC
-LIMIT 5;
-
+--
 
 -- Display the titles which have an imdb score above 8.0 (imdb score above 8.0 is considered good)
 
@@ -392,6 +364,32 @@ WHERE imdb_score = (SELECT MAX(imdb_score) FROM titles)
 ORDER BY imdb_score DESC, tmdb_score 
 DESC;
 
+-- -- Which genres have the highest average IMDb scores, and which genres have the lowest average IMDb scores?
+-- for shows
+
+SELECT 
+    SUBSTRING_INDEX(SUBSTRING_INDEX(genres, ',', n), ',', -1) AS genre,
+    AVG(imdb_score) AS avg_imdb_score, AVG (tmdb_score) as avg_tmdb_score
+FROM titles
+INNER JOIN (SELECT 1 AS n UNION SELECT 2 AS n UNION SELECT 3 AS n UNION SELECT 4 AS n) AS nums
+ON n <= LENGTH(genres) - LENGTH(REPLACE(genres, ',', '')) + 1
+WHERE type= "show"
+GROUP BY genre
+ORDER BY avg_imdb_score desc , avg_tmdb_score DESC
+LIMIT 5;
+
+-- for movies
+
+SELECT 
+    SUBSTRING_INDEX(SUBSTRING_INDEX(genres, ',', n), ',', -1) AS genre,
+    AVG(imdb_score) AS avg_imdb_score, AVG (tmdb_score) as avg_tmdb_score
+FROM titles
+INNER JOIN (SELECT 1 AS n UNION SELECT 2 AS n UNION SELECT 3 AS n UNION SELECT 4 AS n) AS nums
+ON n <= LENGTH(genres) - LENGTH(REPLACE(genres, ',', '')) + 1
+WHERE type= "movie"
+GROUP BY genre
+ORDER BY avg_imdb_score desc , avg_tmdb_score DESC
+LIMIT 5;
 
 -- How many titles have multiple seasons, and what is the average number of seasons for TV shows on Netflix?
 
